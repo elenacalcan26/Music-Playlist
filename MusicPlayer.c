@@ -1,4 +1,4 @@
-// Copyright 2020 <Calcan Elena-Claudia>
+// Copyright 2020 Calcan Elena-Claudia
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
