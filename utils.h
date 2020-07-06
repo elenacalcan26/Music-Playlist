@@ -1,4 +1,4 @@
-// Copyright 2020 <Calcan Elena-Claudia>
+// Copyright 2020 Calcan Elena-Claudia
 #ifndef UTILS_H_
 #define UTILS_H_
 
