@@ -1,0 +1,180 @@
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+README
+------------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+
+Programul reprezinta un player muzical prin implementarea unor structuri de
+date care gestioneaza lista de melodii din player.
+
+
+FISIERE
+------------------------------------------------------------------------------
+MusicPlayer.c
+utils.c
+utils.h
+Makefile
+README
+
+
+FUNCTII
+..............................................................................
+
+void read_data(struct ID3 *x, char *filename); - citeste din fisier binar
+informatiile despre melodie
+
+void print_data(struct ID3 *x, FILE *fout); - afiseaza in fisierul "media.out"
+informatiile despre melodie
+
+void init_list(struct DoublyLinkedList *list); - initializeaza lista
+
+void add_head(struct DoublyLinkedList *list, struct ID3 *data); - functia
+adauga head-ul listei, atunci cand lista e goala
+
+
+void add_first(struct DoublyLinkedList *list, struct ID3 *data); - adauga 
+elemente pe prima pozitie
+
+void add_last(struct DoublyLinkedList *list, struct ID3 *data); - adauga
+elemente pe ultima pozitie
+
+void add_after(struct DoublyLinkedList *l, struct Node *cur, struct ID3 *data);
+- adauga elemente dupa cursor
+
+
+int is_in_playlist(struct DoublyLinkedList *list, struct ID3 *data); - verifica
+daca exista o anumita melodie in playlist. Functia returneaza 0 daca melodia
+exista in playlist, altfel returneaza 1.
+
+void del_head(struct DoublyLinkedList *list); - sterge head-ul listei, atunci
+cand dimensiunea listei == 1
+
+void del_first(struct DoublyLinkedList *list); - sterge primul element din
+lista
+
+void del_last(struct DoublyLinkedList *list); - sterge ultimul element din 
+lista.
+
+void del_curr(struct DoublyLinkedList *list, struct Node *cursor); - sterge
+elementul spre care pointeaza cursorul
+
+int position(struct DoublyLinkedList *list, struct ID3 *data); - returneaza 
+pozitia pe care se afla un element din lista
+
+void remove_song(struct DoublyLinkedList *list, int n); - sterge elementul
+de pe a n-a pozitie;
+
+void print_list(struct DoublyLinkedList *list, FILE *f); - afiseaza playlist-ul
+
+int get_size(struct DoublyLinkedList *list); - returneaza dimensiunea listei
+
+void free_list(struct DoublyLinkedList **pp_list); - elibereaza memoria ocupata
+de lista
+
+--------------------------------------------------------------------------------
+
+Pentru implementarea playlistului am folosit o lista dublu inlantuita.
+
+head = prima melodie din playlist
+tail = ultima melodie din playlist
+cursor = melodia curenta
+node = melodia
+size = numarul total de melodii
+next = schimba melodia in fata
+prev = schimba melodia in spate
+
+Asupra playlist-ului s-au aplicat niste comenzi citite din fisierul media.in, 
+output-ul fiind afisat in media.out. Cele doua fisiere au fost dati ca
+parametrii liniei de comanda.
+
+./tema1 media.in media.out
+
+Pe prima linie s-a citit o variabila q, iar pe urmatoarele q linii am citit
+comenzile.
+
+COMENZI:
+
+ADD_FIRST
+---------
+ADD_FIRST adauga o melodie la inceputul playlistului. Intai verifica daca
+lista e goala. Daca e goala, este apelata functia add_head, iar prima melodie
+adugata intr-un playlist gol devine cea curenta. Daca playlist-ul are mai multe
+melodii in el verifica daca melodia pe care vrem sa o adugam exista sau nu in
+playlist. Daca exista in playlist, melodia este stearsa si este adaugata pe
+noua pozitie. Atunci cand stergem o melodie existenta trebuie sa avem grija la 
+cursor ca acesta sa nu pointeze spre melodia existenta. Daca cursorul pointeaza
+spre melodia pe care o stergem trebuie sa il deplasam inainte sau inapoi.
+Daca nu exista in playlist apelam direct functia de add_first().
+
+ADD_LAST
+--------
+Analog: ADD_FIRST.
+
+ADD_AFTER
+---------
+ADD_AFTER adauga o melodie dupa cursor. Pentru a adauga o melodie dupa cursor,
+ea trebuie sa fie diferita de melodia spre care pointeaza cursorul. Verificam 
+daca melodia exista in playlist. Daca nu, verificam daca cursorul pointeaza
+spre acelasi element tail. Daca da adaugam melodia la final apeland add_last,
+daca nu apelam functia add_after(). Daca exista in playlist, stergem melodia
+si o adaugam pe noua pozitie. Aici nu trebuie sa avem grija de a muta cursorul
+deoarece conditia aceste comenzi esta ca melodia nou pe care vrem sa adaugam 
+in playlist sa fie diferita de ca catre care pointeaza cursorul.
+
+DEL_FIRST
+---------
+DEL_FIRST sterge primul element din lista. Intai verificam daca lista e goala.
+Daca e goala, atunci este afisat mesajul "Error: delete from empty playlist\n".
+Altfel verificam daca dimensiunea listei = 1 si stergem head-ul listei, altfel
+apelam functia del_last avnd grija sa mutam pozitia cursorului daca pointeaza
+spre acelasi element ca head.
+
+DEL_LAST
+---------
+Analog: DEL_FIRST
+
+DEL_CURR
+--------
+DELL_CURR sterge melodie curenta, spre care pointeaza cursorul. Verificam daca
+cursorul este NULL sau list == NULL. Daca da, se afiseaza mesajul 
+"Error: no track playing\n". Altfel, stergem melodia curenta, avand grija sa 
+mutam pozitia cursorului.
+
+DEL_SONG
+--------
+DEL_SONG sterge o melodie din playlist. Verificam daca exita in playlist. Daca
+nu, atunci sa afiseaza mesajul "Error: no song found to delete\n", altfel 
+stergem melodia din playlist, avand grija sa mutama pozitia cursorului, daca
+este nevoie.
+
+MOVE_NEXT
+--------
+MOVE_NEXT muta cursorul la urmataorea melodie. Nu se poate face mutarea daca 
+nu exista cursor sau cursorul se afla pe ultima pozitie din lista, atunci
+se afiseaza mesajul "Error: no track playing\n"
+
+MOVE_PREV
+---------
+Analog: MOVE_NEXT
+
+SHOW_FIRST
+---------
+SHOW_FIRST afiseaza informatii despre prima melodie din playlist. Daca lista e
+goala, nu sunt informatii de afisat si este afisat masajul 
+"Error: show empty playlist\n"
+
+SHOW_LAST
+---------
+Analog: SHOW_FIRST
+
+SHOW_CURR
+---------
+ANALOG: SHOW_FIRST
+
+SHOW_PLAYLIST
+-------------
+SHOW_PLAYLIST afiseaza melodiile din playlist, fiind apelata functia print_list
+
+Dupa ce am parcurs fisierul cu comenzi, se elibereaza memoria ocupata de lista
+free_list() si inchidem cele doua fisier in/out.
+
